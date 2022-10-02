@@ -7,4 +7,4 @@ The solution consists of two class libraries, Models and Scripts, and the WPF pr
 In the WPF project the UI is constructed as well as the services that provide methods for event handling, user input processing and script generation.
 The Models project encompasses the FormViewModel class where the user input values are mapped to the corresponding properties. An instance of FormViewModel is given to all Scripts classes' constructors when the script generation is invoked.
 
-Set WPFUI as starting project (if not already set) before starting the application
+Set WPFUI as starting project (if not already set) before starting the application.
