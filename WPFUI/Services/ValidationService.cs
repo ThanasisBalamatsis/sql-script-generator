@@ -10,7 +10,7 @@ namespace WPFUI.Services
 {
     internal static class ValidationService
     {
-        internal static bool IsValidationProcessSuccessful(IEnumerable<TextBox> textBoxes)
+        internal static bool IsValidationProcessSuccessful(IEnumerable<TextBox> textBoxes, bool isInstCodeRequired)
         {
             string errorsMessage = "";
 
@@ -22,7 +22,7 @@ namespace WPFUI.Services
                 }
                 else if (ValidationLists.intOrBlankFields.Contains(textBox.Name))
                 {
-                    errorsMessage = CheckIfIntegerOrBlank(textBox, errorsMessage);
+                    errorsMessage = CheckIfInstCodeIsValid(textBox, errorsMessage, isInstCodeRequired);
                 }
                 else if (ValidationLists.nonNullableNonEmptyStringFields.Contains(textBox.Name))
                 {
@@ -93,6 +93,7 @@ namespace WPFUI.Services
             {
                 if (path.Substring(path.Length - 4, 4) == ".sql")
                     return true;
+
                 return false;
             }
             catch (Exception)
@@ -101,26 +102,31 @@ namespace WPFUI.Services
             }
         }
 
-        private static string CheckIfIntegerOrBlank(TextBox textBox, string errorsMessage)
+        private static string CheckIfInstCodeIsValid(TextBox textBox, string errorsMessage, bool isInstCodeRequired)
         {
-            if (String.IsNullOrWhiteSpace(textBox.Text))
+            if (String.IsNullOrWhiteSpace(textBox.Text) && !isInstCodeRequired)
                 return errorsMessage;
 
             try
             {
-                // Extra checking because blank space before and after a number input is ignored by Convert.ToInt32 
-                if (textBox.Text.Substring(0, 1) == " " || textBox.Text.Substring(textBox.Text.Length - 1, 1) == " ")
+                if (isInstCodeRequired)
                 {
-                    errorsMessage += $"\n{textBox.Name} value should be a number or blank space";
+                    // Extra checking because blank space before and after a number input is ignored by Convert.ToInt32 
+                    if (textBox.Text.Substring(0, 1) == " " || textBox.Text.Substring(textBox.Text.Length - 1, 1) == " ")
+                    {
+                        errorsMessage += $"\n{textBox.Name} value should be a number";
+                        return errorsMessage;
+                    }
+
+                    Convert.ToInt32(textBox.Text);
                     return errorsMessage;
                 }
 
-                Convert.ToInt32(textBox.Text);
                 return errorsMessage;
             }
             catch (Exception)
             {
-                errorsMessage += $"\n{textBox.Name} value should be a number or blank space";
+                errorsMessage += $"\n{textBox.Name} value should be a number";
                 return errorsMessage;
             }
         }

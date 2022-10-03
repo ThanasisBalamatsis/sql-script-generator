@@ -13,9 +13,9 @@ namespace WPFUI.Services
 {
     internal static class ScriptService
     {
-        internal static void GenerateScriptWithInstCode(MainWindow window, FormViewModel formViewModel)
+        internal static void GenerateScriptWithInstCode(MainWindow window, FormViewModel formViewModel, bool isInstCodeRequired)
         {
-            formViewModel = RunStandardProcess(window, formViewModel);
+            formViewModel = RunStandardProcess(window, formViewModel, isInstCodeRequired);
 
             if (formViewModel != null)
             {
@@ -36,9 +36,9 @@ namespace WPFUI.Services
             }
         }
 
-        internal static void GenerateScriptWithoutInstCode(MainWindow window, FormViewModel formViewModel)
+        internal static void GenerateScriptWithoutInstCode(MainWindow window, FormViewModel formViewModel, bool isInstCodeRequired)
         {
-            formViewModel = RunStandardProcess(window, formViewModel);
+            formViewModel = RunStandardProcess(window, formViewModel, isInstCodeRequired);
 
             if (formViewModel != null)
             {
@@ -60,12 +60,12 @@ namespace WPFUI.Services
         }
 
         // Runs the standard process that is common for both cases of script generation
-        private static FormViewModel? RunStandardProcess(MainWindow window, FormViewModel formViewModel)
+        private static FormViewModel? RunStandardProcess(MainWindow window, FormViewModel formViewModel, bool isInstCodeRequired)
         {
             IEnumerable<TextBox> textBoxes = MappingService.FindControlsInWindow<TextBox>(window);
             IEnumerable<RadioButton> radioButtons = MappingService.FindControlsInWindow<RadioButton>(window);
 
-            if (ValidationService.IsValidationProcessSuccessful(textBoxes))
+            if (ValidationService.IsValidationProcessSuccessful(textBoxes, isInstCodeRequired))
             {
                 formViewModel = MappingService.MapFormValuesToFormViewModelProperties(textBoxes, formViewModel);
                 formViewModel = MappingService.MapFormValuesToFormViewModelProperties(radioButtons, formViewModel);
