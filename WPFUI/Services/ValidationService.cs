@@ -53,7 +53,7 @@ namespace WPFUI.Services
 
         private static string CheckPaths(TextBox textBox, string errorsMessage)
         {
-            switch (textBox.Text)
+            switch (textBox.Name)
             {
                 case "ExcelFilePath":
                     try
@@ -89,9 +89,16 @@ namespace WPFUI.Services
 
         private static bool CheckIfFileTypeIsSql(string path)
         {
-            if (path.Substring(path.Length - 4, 4) == ".sql")
-                return true;
-            return false;
+            try
+            {
+                if (path.Substring(path.Length - 4, 4) == ".sql")
+                    return true;
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         private static string CheckIfIntegerOrBlank(TextBox textBox, string errorsMessage)
