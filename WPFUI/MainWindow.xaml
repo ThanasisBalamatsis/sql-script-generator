@@ -49,6 +49,7 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <!--#endregion-->
@@ -783,18 +784,25 @@
                  Grid.Row="25"
                  Width="230" 
                  Margin="5,5,5,5"/>
+
+        <TextBlock Grid.Column="1" 
+                   Grid.Row="26"  
+                   Text="Note: Place values in the first column in Excel file" 
+                   FontFamily="Segoe UI"
+                   FontStyle="Italic"/>
+        
         <!--#endregion-->
 
         <!--#region ScriptFilePath-->
         <TextBlock Grid.Column="1" 
-                   Grid.Row="26"  
+                   Grid.Row="27"  
                    Text="Sql filePath (e.g. C:\NewFolder\NewScript.sql)" 
                    FontFamily="Segoe UI"/>
 
         <TextBox x:Name="SqlExportFilePath" 
                  Grid.Column="2"
                  Grid.ColumnSpan="2"
-                 Grid.Row="26"
+                 Grid.Row="27"
                  Width="230" 
                  Margin="5,5,5,5"/>
         <!--#endregion-->
@@ -805,7 +813,7 @@
                 Content="Generate Script with Inst. Code" 
                 Grid.Column="4"
                 Grid.ColumnSpan="2"
-                Grid.Row="25"
+                Grid.Row="26"
                 Margin="30,5,5,5" 
                 Click="submitButtonWithInstCode_Click"/>
 
@@ -813,7 +821,7 @@
                 Content="Generate Script without Inst. Code" 
                 Grid.Column="4"
                 Grid.ColumnSpan="2"
-                Grid.Row="26"
+                Grid.Row="27"
                 Margin="30,5,5,5" Click="submitButtonWithoutInstCode_Click"
                 />
         <!--#endregion-->
