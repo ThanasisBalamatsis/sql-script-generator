@@ -9,10 +9,10 @@ using System.Windows.Controls;
 
 namespace WPFUI.Services
 {
-    public static class MappingService
+    internal static class MappingService
     {
         // Finds recursively the Controls of a given type T (e.g. TextBox, RadioButton, Border) in a dependency object (e.g. window)
-        public static IEnumerable<T> FindControlsInWindow<T>(DependencyObject dependencyObject) where T : DependencyObject
+        internal static IEnumerable<T> FindControlsInWindow<T>(DependencyObject dependencyObject) where T : DependencyObject
         {
             if (dependencyObject == null)
                 yield return (T)Enumerable.Empty<T>();
@@ -33,7 +33,7 @@ namespace WPFUI.Services
         }
 
         // Maps the user input to the corresponding property of a FormViewModel instance
-        public static FormViewModel MapFormValuesToFormViewModelProperties(IEnumerable<TextBox> textBoxes, FormViewModel formViewModel)
+        internal static FormViewModel MapFormValuesToFormViewModelProperties(IEnumerable<TextBox> textBoxes, FormViewModel formViewModel)
         {
             foreach (TextBox textBox in textBoxes)
             {
@@ -48,7 +48,7 @@ namespace WPFUI.Services
             return formViewModel;
         }
 
-        public static FormViewModel MapFormValuesToFormViewModelProperties(IEnumerable<RadioButton> radioButtons, FormViewModel formViewModel)
+        internal static FormViewModel MapFormValuesToFormViewModelProperties(IEnumerable<RadioButton> radioButtons, FormViewModel formViewModel)
         {
             foreach (RadioButton radioButton in radioButtons)
             {

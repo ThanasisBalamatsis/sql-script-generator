@@ -8,9 +8,9 @@ using WPFUI.Constants;
 
 namespace WPFUI.Services
 {
-    public static class ValidationService
+    internal static class ValidationService
     {
-        public static bool IsValidationProcessSuccessful(IEnumerable<TextBox> textBoxes)
+        internal static bool IsValidationProcessSuccessful(IEnumerable<TextBox> textBoxes)
         {
             string errorsMessage = "";
 

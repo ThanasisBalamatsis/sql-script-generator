@@ -5,13 +5,60 @@ using System.Windows.Controls;
 using Scripts;
 using System.IO;
 using System.Windows;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.Linq;
 
 namespace WPFUI.Services
 {
-    public static class ScriptService
+    internal static class ScriptService
     {
+        internal static void GenerateScriptWithInstCode(MainWindow window, FormViewModel formViewModel)
+        {
+            formViewModel = RunStandardProcess(window, formViewModel);
+
+            if (formViewModel != null)
+            {
+                string script = new CheckInstallationScript(formViewModel).Script + "\n\n"
+                              + new ManDeployLovTypeScript(formViewModel).Script + "\n\n";
+
+                script = GenerateScriptFromExcelFile(formViewModel, script);
+
+                try
+                {
+                    File.WriteAllText(formViewModel.SqlExportFilePath, script);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Invalid export filePath");
+                }
+            }
+        }
+
+        internal static void GenerateScriptWithoutInstCode(MainWindow window, FormViewModel formViewModel)
+        {
+            formViewModel = RunStandardProcess(window, formViewModel);
+
+            if (formViewModel != null)
+            {
+                formViewModel.InstallationCode = ""; // Script should have empty Installation Code
+                string script = new ManDeployLovTypeScript(formViewModel).Script + "\n\n";
+
+                script = GenerateScriptFromExcelFile(formViewModel, script);
+
+                try
+                {
+                    File.WriteAllText(formViewModel.SqlExportFilePath, script);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Invalid export filePath");
+                }
+            }
+        }
+
         // Runs the standard process that is common for both cases of script generation
-        public static FormViewModel? RunStandardProcess(MainWindow window, FormViewModel formViewModel)
+        private static FormViewModel? RunStandardProcess(MainWindow window, FormViewModel formViewModel)
         {
             IEnumerable<TextBox> textBoxes = MappingService.FindControlsInWindow<TextBox>(window);
             IEnumerable<RadioButton> radioButtons = MappingService.FindControlsInWindow<RadioButton>(window);
@@ -24,48 +71,54 @@ namespace WPFUI.Services
             }
             return null;
         }
-        public static void GenerateScriptWithInstCode(MainWindow window, FormViewModel formViewModel)
+
+        // Reads the Excel file and appends a script for each value of the Excel file
+        private static string GenerateScriptFromExcelFile(FormViewModel formViewModel, string script)
         {
-            formViewModel = RunStandardProcess(window, formViewModel);
-
-            if (formViewModel != null)
+            try
             {
-                string script = new CheckInstallationScript(formViewModel).Script + "\n\n"
-                              + new ManDeployLovTypeScript(formViewModel).Script + "\n\n";
-
-                script = InputService.GenerateScriptFromExcelFile(formViewModel, script);
-
-                try
+                using (SpreadsheetDocument spreadsheetDocument =
+                       SpreadsheetDocument.Open(formViewModel.ExcelFilePath, false))
                 {
-                    File.WriteAllText(formViewModel.SqlExportFilePath, script);
+                    WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                    WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
+                    SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+
+                    string value;
+
+                    foreach (Row row in sheetData.Elements<Row>())
+                    {
+                        Cell cell = row.Elements<Cell>().First();
+                        int stringId = Convert.ToInt32(cell.InnerText);
+                        value = workbookPart.SharedStringTablePart
+                                            .SharedStringTable
+                                            .Elements<SharedStringItem>()
+                                            .ElementAt(stringId).InnerText;
+
+                        formViewModel = AssignValuesToFormViewModelProperties(formViewModel, value);
+                        script += new VariablesDeclarationScript(formViewModel).Script + "\n\n"
+                                + new ManDeployLstOfValScript(formViewModel).Script + "\n\n";
+                    }
                 }
-                catch (Exception)
-                {
-                    MessageBox.Show("Invalid export filePath");
-                }
+
+                script += new SelectScript(formViewModel).Script;
+                return script;
             }
+            catch (Exception)
+            {
+                MessageBox.Show("Invalid Excel filePath");
+            }
+            return script;
         }
 
-        public static void GenerateScriptWithoutInstCode(MainWindow window, FormViewModel formViewModel)
+        private static FormViewModel AssignValuesToFormViewModelProperties(FormViewModel formViewModel, string value)
         {
-            formViewModel = RunStandardProcess(window, formViewModel);
+            formViewModel.LovDesc = value;
+            formViewModel.LovComments = value;
+            formViewModel.LovLongDesc = value;
+            formViewModel.LovInternalDesc = formViewModel.LovtDesc.ToUpper() + "_" + InputService.ProcessExcelValue(value);
 
-            if (formViewModel != null)
-            {
-                formViewModel.InstallationCode = ""; // Script should have empty Installation Code
-                string script = new ManDeployLovTypeScript(formViewModel).Script + "\n\n";
-
-                script = InputService.GenerateScriptFromExcelFile(formViewModel, script);
-
-                try
-                {
-                    File.WriteAllText(formViewModel.SqlExportFilePath, script);
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Invalid export filePath");
-                }
-            }
+            return formViewModel;
         }
     }
 }
