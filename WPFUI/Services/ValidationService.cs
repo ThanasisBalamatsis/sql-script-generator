@@ -108,6 +108,13 @@ namespace WPFUI.Services
 
             try
             {
+                // Extra checking because blank space before and after a number input is ignored by Convert.ToInt32 
+                if (textBox.Text.Substring(0, 1) == " " || textBox.Text.Substring(textBox.Text.Length - 1, 1) == " ")
+                {
+                    errorsMessage += $"\n{textBox.Name} value should be a number or blank space";
+                    return errorsMessage;
+                }
+
                 Convert.ToInt32(textBox.Text);
                 return errorsMessage;
             }
