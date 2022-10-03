@@ -41,7 +41,7 @@ namespace WPFUI.Services
 
             if (formViewModel != null)
             {
-                formViewModel.InstallationCode = ""; // Script should have empty Installation Code
+                formViewModel.InstallationCode = ""; // Script should have empty Installation Code regardless of user input
                 string script = new ManDeployLovTypeScript(formViewModel).Script + "\n\n";
 
                 script = GenerateScriptFromExcelFile(formViewModel, script);
