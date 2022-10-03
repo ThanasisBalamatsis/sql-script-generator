@@ -27,6 +27,7 @@ namespace WPFUI.Services
                 try
                 {
                     File.WriteAllText(formViewModel.SqlExportFilePath, script);
+                    MessageBox.Show("Script successfully generated!");
                 }
                 catch (Exception)
                 {
@@ -49,6 +50,7 @@ namespace WPFUI.Services
                 try
                 {
                     File.WriteAllText(formViewModel.SqlExportFilePath, script);
+                    MessageBox.Show("Script successfully generated!");
                 }
                 catch (Exception)
                 {
