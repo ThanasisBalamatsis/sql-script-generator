@@ -19,12 +19,12 @@ namespace WPFUI
 
         private void submitButtonWithInstCode_Click(object sender, RoutedEventArgs e)
         {
-            ScriptService.AssembleScriptWithInstCode(this, _formViewModel);
+            ScriptService.GenerateScriptWithInstCode(this, _formViewModel);
         }
 
         private void submitButtonWithoutInstCode_Click(object sender, RoutedEventArgs e)
         {
-            ScriptService.AssembleScriptWithoutInstCode(this, _formViewModel);
+            ScriptService.GenerateScriptWithoutInstCode(this, _formViewModel);
         }
     }
 }

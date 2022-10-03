@@ -24,7 +24,7 @@ namespace WPFUI.Services
             }
             return null;
         }
-        public static void AssembleScriptWithInstCode(MainWindow window, FormViewModel formViewModel)
+        public static void GenerateScriptWithInstCode(MainWindow window, FormViewModel formViewModel)
         {
             formViewModel = RunStandardProcess(window, formViewModel);
 
@@ -46,7 +46,7 @@ namespace WPFUI.Services
             }
         }
 
-        public static void AssembleScriptWithoutInstCode(MainWindow window, FormViewModel formViewModel)
+        public static void GenerateScriptWithoutInstCode(MainWindow window, FormViewModel formViewModel)
         {
             formViewModel = RunStandardProcess(window, formViewModel);
 
