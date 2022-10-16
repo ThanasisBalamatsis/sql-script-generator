@@ -13,9 +13,9 @@ namespace WPFUI.Services
 {
     internal static class ScriptService
     {
-        internal static void GenerateScriptWithInstCode(MainWindow window, FormViewModel formViewModel, bool isInstCodeRequired)
+        internal static void GenerateScriptWithInstCode(MainWindow window, FormViewModel formViewModel)
         {
-            formViewModel = RunStandardProcess(window, formViewModel, isInstCodeRequired);
+            formViewModel = RunStandardProcess(window, formViewModel, true);
 
             if (formViewModel != null)
             {
@@ -36,13 +36,12 @@ namespace WPFUI.Services
             }
         }
 
-        internal static void GenerateScriptWithoutInstCode(MainWindow window, FormViewModel formViewModel, bool isInstCodeRequired)
+        internal static void GenerateScriptWithoutInstCode(MainWindow window, FormViewModel formViewModel)
         {
-            formViewModel = RunStandardProcess(window, formViewModel, isInstCodeRequired);
+            formViewModel = RunStandardProcess(window, formViewModel, false);
 
             if (formViewModel != null)
             {
-                formViewModel.InstallationCode = ""; // Script should have empty Installation Code regardless of user input
                 string script = new ManDeployLovTypeScript(formViewModel).Script + "\n\n";
 
                 script = GenerateScriptFromExcelFile(formViewModel, script);
@@ -67,7 +66,7 @@ namespace WPFUI.Services
 
             if (ValidationService.IsValidationProcessSuccessful(textBoxes, isInstCodeRequired))
             {
-                formViewModel = MappingService.MapFormValuesToFormViewModelProperties(textBoxes, formViewModel);
+                formViewModel = MappingService.MapFormValuesToFormViewModelProperties(textBoxes, formViewModel, isInstCodeRequired);
                 formViewModel = MappingService.MapFormValuesToFormViewModelProperties(radioButtons, formViewModel);
                 return formViewModel;
             }

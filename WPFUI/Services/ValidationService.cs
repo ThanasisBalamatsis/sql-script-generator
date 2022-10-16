@@ -22,7 +22,10 @@ namespace WPFUI.Services
                 }
                 else if (ValidationLists.intOrBlankFields.Contains(textBox.Name))
                 {
-                    errorsMessage = CheckIfInstCodeIsValid(textBox, errorsMessage, isInstCodeRequired);
+                    if (isInstCodeRequired)
+                        errorsMessage = CheckIfInstCodeIsValid(textBox, errorsMessage);
+                    else
+                        continue;
                 }
                 else if (ValidationLists.nonNullableNonEmptyStringFields.Contains(textBox.Name))
                 {
@@ -102,27 +105,20 @@ namespace WPFUI.Services
             }
         }
 
-        private static string CheckIfInstCodeIsValid(TextBox textBox, string errorsMessage, bool isInstCodeRequired)
+        private static string CheckIfInstCodeIsValid(TextBox textBox, string errorsMessage)
         {
-            if (String.IsNullOrWhiteSpace(textBox.Text) && !isInstCodeRequired)
-                return errorsMessage;
-
             try
             {
-                if (isInstCodeRequired)
+                // Extra checking because blank space before and after a number input is ignored by Convert.ToInt32 
+                if (textBox.Text.Substring(0, 1) == " " || textBox.Text.Substring(textBox.Text.Length - 1, 1) == " ")
                 {
-                    // Extra checking because blank space before and after a number input is ignored by Convert.ToInt32 
-                    if (textBox.Text.Substring(0, 1) == " " || textBox.Text.Substring(textBox.Text.Length - 1, 1) == " ")
-                    {
-                        errorsMessage += $"\n{textBox.Name} value should be a number";
-                        return errorsMessage;
-                    }
-
-                    Convert.ToInt32(textBox.Text);
+                    errorsMessage += $"\n{textBox.Name} value should be a number";
                     return errorsMessage;
                 }
 
+                Convert.ToInt32(textBox.Text);
                 return errorsMessage;
+
             }
             catch (Exception)
             {

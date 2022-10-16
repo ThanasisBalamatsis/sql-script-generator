@@ -33,7 +33,7 @@ namespace WPFUI.Services
         }
 
         // Maps the user input to the corresponding property of a FormViewModel instance
-        internal static FormViewModel MapFormValuesToFormViewModelProperties(IEnumerable<TextBox> textBoxes, FormViewModel formViewModel)
+        internal static FormViewModel MapFormValuesToFormViewModelProperties(IEnumerable<TextBox> textBoxes, FormViewModel formViewModel, bool isInstCodeRequired)
         {
             foreach (TextBox textBox in textBoxes)
             {
@@ -41,7 +41,10 @@ namespace WPFUI.Services
                 {
                     if (property.Name == textBox.Name)
                     {
-                        property.SetValue(formViewModel, textBox.Text);
+                        if (textBox.Name == "InstallationCode" && !isInstCodeRequired)
+                            property.SetValue(formViewModel, ""); // Script should have empty Installation Code regardless of user input if InstCode not required
+                        else
+                            property.SetValue(formViewModel, textBox.Text);
                     }
                 }
             }
