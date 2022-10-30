@@ -8,24 +8,24 @@ namespace WPFUI.Enums
 {
     internal class Enums
     {
-        public enum pathsToCheck
+        internal enum pathsToCheck
         {
             ExcelFilePath,
             SqlExportFilePath
         }
 
-        public enum intOrBlankFields
+        internal enum intOrBlankFields
         {
             InstallationCode
         }
 
-        public enum nonNullableNonEmptyStringFields
+        internal enum nonNullableNonEmptyStringFields
         {
             LovtDesc,
             LovtComments
         }
 
-        public enum nullableIntFields
+        internal enum nullableIntFields
         {
             LovLow,
             LovHigh,
@@ -34,14 +34,14 @@ namespace WPFUI.Enums
             LovAggregatedPriority
         }
 
-        public enum nullableNonEmptyStringFields
+        internal enum nullableNonEmptyStringFields
         {
             LovSId,
             LovSource,
             LovGroup
         }
 
-        public enum oneZeroOrNullFields
+        internal enum oneZeroOrNullFields
         {
             LovRetypePass,
             LovIsOutOfCollection,
