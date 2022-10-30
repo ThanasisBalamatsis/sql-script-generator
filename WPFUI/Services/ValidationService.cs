@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using WPFUI.Constants;
+using static WPFUI.Enums.Enums;
 
 namespace WPFUI.Services
 {
@@ -16,30 +17,30 @@ namespace WPFUI.Services
 
             foreach (TextBox textBox in textBoxes)
             {
-                if (ValidationLists.pathsToCheck.Contains(textBox.Name))
+                if (Enum.IsDefined(typeof(pathsToCheck), textBox.Name))
                 {
                     errorsMessage = CheckPaths(textBox, errorsMessage);
                 }
-                else if (ValidationLists.intOrBlankFields.Contains(textBox.Name))
+                else if (Enum.IsDefined(typeof(intOrBlankFields), textBox.Name))
                 {
                     if (isInstCodeRequired)
                         errorsMessage = CheckIfInstCodeIsValid(textBox, errorsMessage);
                     else
                         continue;
                 }
-                else if (ValidationLists.nonNullableNonEmptyStringFields.Contains(textBox.Name))
+                else if (Enum.IsDefined(typeof(nonNullableNonEmptyStringFields), textBox.Name))
                 {
                     errorsMessage = CheckIfNonNullableNonEmptyString(textBox, errorsMessage);
                 }
-                else if (ValidationLists.nullableIntFields.Contains(textBox.Name))
+                else if (Enum.IsDefined(typeof(nullableIntFields), textBox.Name))
                 {
                     errorsMessage = CheckIfNullableInt(textBox, errorsMessage);
                 }
-                else if (ValidationLists.nullableNonEmptyStringFields.Contains(textBox.Name))
+                else if (Enum.IsDefined(typeof(nullableNonEmptyStringFields), textBox.Name))
                 {
                     errorsMessage = CheckIfNullableNonEmptyString(textBox, errorsMessage);
                 }
-                else if (ValidationLists.oneZeroOrNullFields.Contains(textBox.Name))
+                else if (Enum.IsDefined(typeof(oneZeroOrNullFields), textBox.Name))
                 {
                     errorsMessage = CheckIfOneZeroOrNull(textBox, errorsMessage);
                 }
